@@ -18,4 +18,4 @@
 go.work
 
 # Output directory for `go build`
-build/
+bin/
