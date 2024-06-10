@@ -9,8 +9,8 @@ import (
 	gambol "github.com/nuccitheboss/gambol/internal/common"
 )
 
-const shortHelp = "Run gambol playthroughs"
-const longHelp = `Description:
+const runShortHelp = "Run gambol playthroughs"
+const runLongHelp = `Description:
   Run a gambol playthrough
 `
 const examples = `  gambol run spec.yaml
@@ -19,8 +19,8 @@ const examples = `  gambol run spec.yaml
 
 var runCmd = &cobra.Command{
 	Use:     "run",
-	Short:   shortHelp,
-	Long:    longHelp,
+	Short:   runShortHelp,
+	Long:    runLongHelp,
 	Example: examples,
 	Args:    cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
