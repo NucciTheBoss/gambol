@@ -82,12 +82,54 @@ func (c *Cache) GetArtifact(key string) ([]byte, error) {
 	return artifact, nil
 }
 
-func (c *Cache) PutInstanceId(id string) {
+func (c *Cache) PutInstanceId(id string) error {
+	db, err := c.openInstanceDB()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
 
+	if err := db.Update(func(tx *bbolt.Tx) error {
+		b := tx.Bucket(c.name)
+		if b == nil {
+			return errors.New("failed to open instance cache")
+		}
+
+		return b.Put([]byte(id), nil)
+	}); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (c *Cache) GetInstanceIds() {
+func (c *Cache) GetInstanceIds() ([]string, error) {
+	db, err := c.openInstanceDB()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
 
+	var names []string
+	if err := db.View(func(tx *bbolt.Tx) error {
+		b := tx.Bucket(c.name)
+		if b == nil {
+			return errors.New("failed to open instance cache")
+		}
+
+		if err := b.ForEach(func(k, _ []byte) error {
+			names = append(names, string(k))
+			return nil
+		}); err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return names, nil
 }
 
 // Flush out caches after successful completion of playthrough.
