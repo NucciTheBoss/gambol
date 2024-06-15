@@ -6,14 +6,14 @@ export GOBIN=$(CURDIR)/bin
 
 ##@ Build
 
-build: bin/gambol ## Build `gambol` binary.
+build: bin/gambol ## Build executable binary
 
 bin/gambol:
 	@mkdir -p bin/
 	@go install -v $(REPO_PATH)/cmd/gambol
 
 .PHONY: snap
-snap: ## Build `gambol` snap package.
+snap: ## Build snap package
 	@cp -ra build/snap snap
 	@snapcraft -v pack
 	@rm -rf snap
@@ -21,18 +21,23 @@ snap: ## Build `gambol` snap package.
 ##@ Lint
 
 .PHONY: fmt
-fmt: ## Format `gambol` source code.
+fmt: ## Format source code
 	@go fmt -x ./...
 	@golangci-lint run --fix
 
 .PHONY: lint
-lint: ## Lint `gambol` source code.
+lint: ## Lint source code
 	@golangci-lint run
+
+##@ Test
+.PHONY: e2e
+e2e: ## Run end to end integration tests
+	@echo Running e2e test: slurm
 
 ##@ Clean
 
 .PHONY: clean
-clean: ## Delete all builds and downloaded dependencies.
+clean: ## Delete all builds and downloaded dependencies
 	@rm -rf bin/
 	@rm -rf snap/
 
