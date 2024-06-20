@@ -1,4 +1,4 @@
-name: "Simple integration test example"
+name: "simple e2e test"
 provider:
   lxd:
 acts:
