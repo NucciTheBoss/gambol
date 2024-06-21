@@ -30,9 +30,30 @@ lint: ## Lint source code
 	@golangci-lint run
 
 ##@ Test
+
+define E2E_TESTS
+	e2e-simple
+	e2e-hostpath
+	e2e-advanced
+endef
+
 .PHONY: e2e
-e2e: ## Run end to end integration tests
-	@echo Running e2e test: slurm
+e2e: $(E2E_TESTS) ## Run end to end integration tests
+
+.PHONY: e2e-simple
+e2e-simple:
+	@echo Running e2e test: simple
+	@cd $(CURDIR)/test/e2e/simple && ${GOBIN}/gambol -v run simple.yaml
+
+.PHONY: e2e-hostpath
+e2e-hostpath:
+	@echo Running e2e test: hostpath
+	@cd $(CURDIR)/test/e2e/hostpath && ${GOBIN}/gambol -v run hostpath.yaml
+
+.PHONY: e2e-advanced
+e2e-advanced:
+	@echo Running e2e test: advanced
+	@cd $(CURDIR)/test/e2e/advanced && ${GOBIN}/gambol -v run advanced.yaml
 
 ##@ Clean
 
