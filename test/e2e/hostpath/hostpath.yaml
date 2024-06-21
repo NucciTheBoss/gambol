@@ -1,0 +1,40 @@
+name: "hostpath e2e test"
+provider:
+  lxd:
+acts:
+  file:
+    name: "Test pulling/pushing file from host."
+    run-on: jammy
+    input:
+      - host-path: testdata/test.txt
+        path: test-input.txt
+    output:
+      - host-path: testdata/test-output.txt
+        path: test-output.txt
+    scenes:
+      - name: "Test input file"
+        run: |
+          test -f test-input.txt
+      - name: "Generate output file"
+        run: |
+          echo "Hello world!" > test-output.txt
+
+  directory:
+    name: "Test pulling/pushing directory from host."
+    run-on: jammy
+    input:
+      - host-path: testdata/test
+        path: test-input
+    output:
+      - host-path: testdata/test-output
+        path: test-output
+    scenes:
+      - name: "Test input directory"
+        run: |
+          test -d test-input
+      - name: "Generate output directory"
+        run: |
+          mkdir test-output
+          touch test-output/test1.txt
+          touch test-output/test2.txt
+          touch test-output/test3.txt
