@@ -167,7 +167,7 @@ func (p *Driver) ExecInstance(id string, script string) error {
 		return err
 	}
 
-	if returnCode := op.Get().Metadata["return"]; returnCode != 0 {
+	if returnCode := op.Get().Metadata["return"]; returnCode != float64(0) {
 		return errors.New("scene failed")
 	}
 
