@@ -1,6 +1,8 @@
 package common
 
 import (
+	"fmt"
+
 	"github.com/google/uuid"
 
 	"github.com/nuccitheboss/gambol/internal/provider/lxd"
@@ -62,6 +64,7 @@ func runActs(queue WorkQueue) error {
 }
 
 func runAct(act Act) error {
+	fmt.Printf("Executing Act: %s\n", act.Option.Name)
 	exists, err := provider.CheckIfInstanceExists(act.Id)
 	if err != nil {
 		return err
@@ -101,6 +104,7 @@ func runAct(act Act) error {
 
 func runScenes(id string, scenes []Scene) error {
 	for _, scene := range scenes {
+		fmt.Printf("Executing Scene: %s\n", scene.Name)
 		if err := provider.ExecInstance(id, scene.Run); err != nil {
 			return err
 		}
