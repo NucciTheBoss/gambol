@@ -65,36 +65,42 @@ func runActs(queue WorkQueue) error {
 
 func runAct(act Act) error {
 	fmt.Printf("Executing Act: %s\n", act.Option.Name)
-	exists, err := provider.CheckIfInstanceExists(act.Id)
+	exists, err := provider.CheckIfInstanceExists(act.Option.RunOn)
 	if err != nil {
 		return err
-	} else if !exists {
+	}
+
+	var instanceId string
+	if !exists {
 		if err := provider.CreateInstance(act.Id, act.Option.RunOn); err != nil {
 			return err
 		}
 		if err := cache.PutInstanceId(act.Id); err != nil {
 			return err
 		}
+		instanceId = act.Id
+	} else {
+		instanceId = act.Option.RunOn
 	}
 
 	if len(act.Option.Input) > 0 {
-		if err := push(act.Id, act.Option.Input); err != nil {
+		if err := push(instanceId, act.Option.Input); err != nil {
 			return err
 		}
 	}
 
-	if err := runScenes(act.Id, act.Option.Scenes); err != nil {
+	if err := runScenes(instanceId, act.Option.Scenes); err != nil {
 		return err
 	}
 
 	if len(act.Option.Output) > 0 {
-		if err := pull(act.Id, act.Option.Output); err != nil {
+		if err := pull(instanceId, act.Option.Output); err != nil {
 			return err
 		}
 	}
 
 	if !act.Option.KeepAlive {
-		if err := provider.StopInstance(act.Id); err != nil {
+		if err := provider.StopInstance(instanceId); err != nil {
 			return err
 		}
 	}
