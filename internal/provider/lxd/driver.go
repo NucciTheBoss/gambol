@@ -192,7 +192,7 @@ var getArtifactScript = `
 UUID=%s
 TARGET=%s
 pushd $(dirname ${TARGET})
-tar -cf /root/.gambol/output/${UUID}.tar ${TARGET}
+tar -cf /root/.gambol/output/${UUID}.tar $(basename ${TARGET})
 `
 
 // Get Artifact from Act instance.
