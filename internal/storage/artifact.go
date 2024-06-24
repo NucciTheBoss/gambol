@@ -37,7 +37,6 @@ func (a *Artifact) Name() (string, error) {
 	}
 }
 
-//
 func (a *Artifact) IsDir(artifact []byte) (bool, error) {
 	r := bytes.NewBuffer(artifact)
 	tr := tar.NewReader(r)
