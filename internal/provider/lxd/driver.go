@@ -89,6 +89,20 @@ func (p *Driver) CreateInstance(id string, platform string) error {
 		return err
 	}
 
+	// Wait for Act instance to finish initializing.
+	initRequest := api.InstanceExecPost{
+		Command: []string{"cloud-init", "status", "-w"},
+	}
+	initArgs := lxd.InstanceExecArgs{}
+	op, err = p.server.ExecInstance(id, initRequest, &initArgs)
+	if err != nil {
+		return err
+	}
+	err = op.Wait()
+	if err != nil {
+		return err
+	}
+
 	execRequest := api.InstanceExecPost{
 		Command: []string{"mkdir", "-p", "/root/.gambol/input", "/root/.gambol/output"},
 	}
