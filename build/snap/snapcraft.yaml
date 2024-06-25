@@ -1,0 +1,47 @@
+name: gambol
+version: "0.1.0"
+summary: Frolic playfully while your workflows run in the background!
+description: |
+  A simple workflow engine for distributed applications 🎬 🌌
+
+  gambol enables you to write straightforward workflows that can
+  be run on no-frills cloud environments. Rather than require you
+  to be an expert in cloud infrastructure, gambol allows you focus
+  on what matters: **getting work done**. You can write end-to-end
+  tests for your distributed application, test packages in isolated
+  environments, create comphrensive testing suites that can run both
+  locally and in the cloud, and more. Say goodbye to spending half your
+  day just setting up your testing infrastructure with shell script soup!
+license: AGPL-3.0
+issues: https://github.com/NucciTheBoss/gambol/issues
+
+base: core24
+grade: stable
+confinement: strict
+compression: lzo
+platforms:
+  amd64:
+
+apps:
+  gambol:
+    command: bin/gambol
+    plugs:
+      - home
+      - removable-media
+      - lxd
+      - dot-gambol
+
+parts:
+  gambol:
+    source: .
+    plugin: go
+    build-snaps:
+      - go/1.22/stable
+
+plugs:
+  dot-gambol:
+    interface: personal-files
+    write:
+      - $HOME/.gambol
+
+
