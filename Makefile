@@ -33,6 +33,7 @@ lint: ## Lint source code
 
 define E2E_TESTS
 	e2e-simple
+	e2e-error
 	e2e-hostpath
 	e2e-advanced
 endef
@@ -44,6 +45,11 @@ e2e: $(E2E_TESTS) ## Run end to end integration tests
 e2e-simple:
 	@echo Running e2e test: simple
 	@cd $(CURDIR)/test/e2e/simple && ${GOBIN}/gambol -v run simple.yaml
+
+.PHONY: e2e-error
+e2e-error:
+	@echo Running e2e test: error
+	@cd $(CURDIR)/test/e2e/error && ${GOBIN}/gambol -v run error.yaml
 
 .PHONY: e2e-hostpath
 e2e-hostpath:

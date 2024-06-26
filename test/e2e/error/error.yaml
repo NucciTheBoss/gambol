@@ -1,0 +1,13 @@
+name: "error e2e test"
+provider:
+  lxd:
+acts:
+  purposeful-error:
+    name: "Throw error on purpose and capture stdout and stderr"
+    run-on: noble
+    scenes:
+      - name: "Generate some text a throw an error"
+        run: |
+          hostname
+          cat /etc/os-release
+          exit 1
