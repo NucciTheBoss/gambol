@@ -9,6 +9,7 @@ import (
 
 	lxd "github.com/canonical/lxd/client"
 	"github.com/canonical/lxd/shared/api"
+	"github.com/dsnet/golib/memfile"
 	"github.com/google/uuid"
 	"github.com/nuccitheboss/gambol/internal/storage"
 )
@@ -166,11 +167,15 @@ func (p *Driver) ExecInstance(id string, script string) error {
 		return err
 	}
 
+	stdout := memfile.New([]byte(""))
 	execRequest := api.InstanceExecPost{
-		Command:      []string{"bash", "/root/.gambol/run"},
-		RecordOutput: true,
+		Command:   []string{"bash", "/root/.gambol/run"},
+		WaitForWS: true,
 	}
-	execArgs := lxd.InstanceExecArgs{}
+	execArgs := lxd.InstanceExecArgs{
+		Stdout: stdout,
+		Stderr: stdout,
+	}
 	op, err := p.server.ExecInstance(id, execRequest, &execArgs)
 	if err != nil {
 		return err
@@ -182,6 +187,8 @@ func (p *Driver) ExecInstance(id string, script string) error {
 	}
 
 	if returnCode := op.Get().Metadata["return"]; returnCode != float64(0) {
+		fmt.Println("error encountered during scene execution:")
+		fmt.Println(string(stdout.Bytes()))
 		return errors.New("scene failed")
 	}
 
