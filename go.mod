@@ -5,6 +5,7 @@ go 1.22.3
 require github.com/spf13/cobra v1.8.0
 
 require (
+	github.com/dsnet/golib/memfile v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
